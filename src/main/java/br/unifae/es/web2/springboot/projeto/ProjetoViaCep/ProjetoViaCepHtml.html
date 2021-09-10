@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Trabalho Requisições ViaCep</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            
+            .formata {
+                background-color: lightgray;
+                font-family: monospace;
+                font-size: 13px;
+            }
+            
+        </style>
+    </head>
+    <body class="formata">
+        
+        <form method="get" action=".">
+            <fieldset>
+                <legend>Formulário</legend>
+                <label>Cep:
+                    <input name="cep" type="text" id="cep" value="" size="10" maxlength="9" /></label><br/>
+                <label>Logradouro:
+                    <input name="logradouro" type="text" id="logra" size="60" maxlength="9"/></label><br/>
+                <label>Bairro:
+                    <input name="bairro" type="text" id="bar" size="40" maxlength="9"/></label><br/>
+                <label>Cidade:
+                    <input name="cidade" type="text" id="city" size="40" maxlength="9"/></label><br/>     
+                <label>Estado:
+                    <input name="estado" type="text" id="est" size="2" maxlength="9"/></label><br/><br/>     
+                <button type="button" onClick="pegaCep()">Consultar</button>
+            </fieldset>
+        </form>
+        <script>
+           
+            function pegaCep () {
+                
+                var cep = document.getElementById("cep").value;
+                
+                var verifica = /^[0-9]{8}$/;
+                //valindando CEP
+                if (cep !== "") {
+                    if (verifica.test(cep)) {
+                        request(cep);
+                    }
+                    else {
+                        alert("Erro! CEP deve conter 8 dígitos.");
+                    }
+                }else {
+                    alert("Erro! Preencha o campo CEP.");
+                }
+                
+            }
+            
+            function request(cep) { 
+                
+                var xmlhttp = new XMLHttpRequest();
+                
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        var resposta = JSON.parse(this.responseText);
+                        if (!("erro" in resposta)) {
+                            document.getElementById('logra').value=(resposta.logradouro);
+                            document.getElementById('bar').value=(resposta.bairro);
+                            document.getElementById('city').value=(resposta.localidade);
+                            document.getElementById('est').value=(resposta.uf);
+                        }else {
+                            alert("Erro! CEP não foi encontrado.");
+                        }
+                    }
+                };
+                             
+                var url = "https://viacep.com.br/ws/"+cep+"/json/";
+                
+                xmlhttp.open("GET",url,true);
+                xmlhttp.send();
+                
+            }
+            
+        </script> 
+    </body>
+</html>
