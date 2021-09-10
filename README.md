@@ -1,2 +1,2 @@
 # ProjetoViaCep
-Projeto em java utilizando a API viacep.
+Projeto em html utilizando spring-boot framework java e a API viacep.
